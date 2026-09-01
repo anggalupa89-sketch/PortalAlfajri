@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cetak Barcode 1D SDIT Al Fajri (3.5cm x 1.5cm)</title>
+    <!-- Library pembuat Barcode 1D (JsBarcode) -->
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <style>
+        :root {
+            --primary-green: #1b5e20;
+            --accent-gold: #d4af37;
+            --light-green: #e8f5e9;
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: var(--light-green); 
+            margin: 0; 
+            padding: 20px; 
+        }
+
+        .no-print { 
+            background: white; 
+            padding: 25px; 
+            border-radius: 12px; 
+            border: 2px solid var(--primary-green); 
+            max-width: 650px; 
+            margin: 0 auto 25px auto; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        textarea { 
+            width: 100%; 
+            height: 150px; 
+            padding: 12px; 
+            box-sizing: border-box; 
+            border: 1px solid var(--primary-green); 
+            border-radius: 6px; 
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button { 
+            flex: 1;
+            background-color: var(--primary-green); 
+            color: white; 
+            border: none; 
+            padding: 12px 20px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        button:hover { 
+            background-color: #0d3b10; 
+        }
+
+        button.btn-print {
+            background-color: #2e7d32;
+        }
+
+        /* Layout Grid Cetak Kartu */
+        #print-area { 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 12px; 
+        }
+
+        /* Wadah Kartu Siswa (Ukuran Kartu Disesuaikan) */
+        .barcode-card { 
+            background: white; 
+            border: 2px solid var(--primary-green); 
+            padding: 10px; 
+            border-radius: 8px; 
+            width: 5.5cm; /* Ukuran standar lebar kartu pelajar */
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            text-align: center;
+            box-sizing: border-box;
+            position: relative;
+            page-break-inside: avoid;
+        }
+
+        .barcode-card .header-tag {
+            font-size: 8.5px;
+            font-weight: bold;
+            color: var(--primary-green);
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            border-bottom: 1.5px solid var(--accent-gold);
+            width: 100%;
+            padding-bottom: 2px;
+        }
+
+        .barcode-card .student-name { 
+            margin-top: 2px; 
+            font-size: 11px; 
+            font-weight: bold; 
+            color: #111; 
+            line-height: 1.2;
+        }
+
+        .barcode-card .student-class { 
+            font-size: 9.5px; 
+            color: var(--primary-green); 
+            font-weight: 600;
+            margin-top: 1px;
+        }
+
+        .barcode-card .student-nis { 
+            font-size: 9.5px; 
+            color: #333; 
+            font-weight: bold;
+            margin-top: 2px;
+            letter-spacing: 0.5px;
+        }
+
+        /* 
+           UKURAN FISIK BARCODE DITETAPKAN PRESISI:
+           Lebar: 3.5cm | Tinggi: 1.5cm 
+        */
+        svg.barcode-svg {
+            width: 3.5cm !important;
+            height: 1.5cm !important;
+            margin: 6px 0 2px 0;
+            display: block;
+        }
+
+        /* Pengaturan Cetak Halaman (A4 Optimization) */
+        @media print {
+            .no-print { display: none !important; }
+            body { background-color: white; padding: 0; }
+            #print-area { gap: 8px; justify-content: flex-start; }
+            .barcode-card { 
+                border: 1.5px solid var(--primary-green); 
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print">
+        <h2 style="color: var(--primary-green); margin-top: 0;">Generator Barcode 1D SDIT Al Fajri</h2>
+        <p style="font-size: 13px; color: #333; line-height: 1.5;">
+            Salin (<i>Copy-Paste</i>) data siswa dari <b>Excel / Google Sheets</b> ke kotak di bawah.<br>
+            Format kolom: <b>NIS, Nama Siswa, Kelas</b>
+        </p>
+        
+        <textarea id="dataInput" placeholder="Contoh format (Bisa langsung paste dari Excel):
+262701003, Albee Abizar Pahlevi, Kelas 1A
+262701004, Alexander Abraham, Kelas 1A
+262701005, Muhammad Ramdan, Kelas 1B"></textarea>
+        
+        <div class="btn-group">
+            <button onclick="generateBarcode()">1. Buat Barcode 1D (3.5 x 1.5 cm)</button>
+            <button onclick="window.print()" class="btn-print">2. Cetak Kartu</button>
+        </div>
+    </div>
+
+    <!-- Area Tempat Kartu Barcode Dibuat -->
+    <div id="print-area"></div>
+
+    <script>
+        function generateBarcode() {
+            const printArea = document.getElementById("print-area");
+            printArea.innerHTML = ""; // Bersihkan isi sebelumnya
+            
+            const dataText = document.getElementById("dataInput").value;
+            const barisData = dataText.split('\n');
+
+            barisData.forEach((baris, index) => {
+                if(baris.trim() !== "") {
+                    // Deteksi pemisah: Tab (bawaan Excel) atau Koma
+                    let kolom = baris.includes('\t') ? baris.split('\t') : baris.split(',');
+
+                    if(kolom.length >= 3) {
+                        const nisn = kolom[0].trim();
+                        const nama = kolom[1].trim();
+                        const kelas = kolom[2].trim();
+                        
+                        const svgId = `barcode-svg-${index}`;
+
+                        // Wadah Kartu
+                        const card = document.createElement("div");
+                        card.className = "barcode-card";
+                        
+                        // Header Kartu
+                        const header = document.createElement("div");
+                        header.className = "header-tag";
+                        header.innerText = "SDIT AL FAJRI CAHAYA UMAT";
+
+                        // Elemen SVG Barcode
+                        const svgElem = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                        svgElem.setAttribute("id", svgId);
+                        svgElem.setAttribute("class", "barcode-svg");
+
+                        // Teks Informasi Siswa
+                        const namaTeks = document.createElement("div");
+                        namaTeks.className = "student-name";
+                        namaTeks.innerText = nama;
+                        
+                        const kelasTeks = document.createElement("div");
+                        kelasTeks.className = "student-class";
+                        kelasTeks.innerText = kelas;
+
+                        const nisnTeks = document.createElement("div");
+                        nisnTeks.className = "student-nis";
+                        nisnTeks.innerText = "NIS: " + nisn;
+
+                        // Penggabungan Elemen Kartu
+                        card.appendChild(header);
+                        card.appendChild(namaTeks);
+                        card.appendChild(kelasTeks);
+                        card.appendChild(svgElem);
+                        card.appendChild(nisnTeks);
+                        
+                        printArea.appendChild(card);
+
+                        // Render Barcode 1D (Format CODE128)
+                        JsBarcode(`#${svgId}`, nisn, {
+                            format: "CODE128",
+                            lineColor: "#000",
+                            margin: 0,
+                            displayValue: false // Angka NIS ditampilkan di bawah dengan teks HTML yang lebih rapi
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
