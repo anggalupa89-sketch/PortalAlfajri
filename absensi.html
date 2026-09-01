@@ -139,15 +139,14 @@
     </div>
 
     <script>
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyjnyEiM5PxnvcBUTD4TBvUwyoJ9OZL3yPiWvr0K_s66blFge4jkSM2KgSR2LtzVXT6/exec'; 
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwacJRrRLVM-u-mMElc1CxPT-Pd60JlGBr8sTjhCyg6pnAi8GIHCxD5VTQHjEE5754b/exec'; 
 
         const databaseSiswa = {
             "262701003": "Albee Abizar Pahlevi",
             "262701004": "Alexander Abraham",
             "262701005": "Muhammad Ramdan",
             "1004": "Fatimah Azzahra"
-        }; 	
-	
+        }; 
 
         function populateAutocomplete() {
             const datalist = document.getElementById('studentListOptions');
@@ -210,10 +209,17 @@
 
         function sendDataToSheets(nama, status, ket) {
             if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes('URL_APPS_SCRIPT')) return;
+            
+            // Gunakan text/plain agar bebas dari blokir CORS Browser
             fetch(APPS_SCRIPT_URL, {
-                method: 'POST', mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nama: nama, status: status, keterangan: ket })
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify({
+                    nama: nama,
+                    status: status,
+                    keterangan: ket
+                })
             });
         }
 
