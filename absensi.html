@@ -6,94 +6,165 @@
     <title>Presensi Siswa - SDIT Al Fajri Cahaya Umat</title>
     <style>
         :root {
-            --primary-color: #1b5e20;
-            --bg-color: #e8f5e9;
-            --card-bg: #ffffff;
+            --primary-green: #1b5e20;
+            --accent-gold: #d4af37;
+            --light-green: #e8f5e9;
+            --dark-green: #0d3b10;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
+            /* Background Gambar Suasana Sekolah & Overlay Soft Green */
+            background: linear-gradient(rgba(232, 245, 233, 0.92), rgba(232, 245, 233, 0.92)), 
+                        url('https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
             margin: 0;
             padding: 20px;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 600px;
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border: 2px solid var(--primary-color);
+            min-height: 100vh;
             box-sizing: border-box;
         }
 
-        h2 {
-            text-align: center;
-            color: var(--primary-color);
-            margin-top: 0;
+        /* Container dibuat Wide / Landscape (Max 1100px) */
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            background: rgba(255, 255, 255, 0.96);
+            padding: 25px 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: 2px solid var(--primary-green);
+            backdrop-filter: blur(5px);
+        }
+
+        /* Header dengan Logo & Judul */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 3px solid var(--accent-gold);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .school-logo {
+            width: 55px;
+            height: 55px;
+            object-fit: contain;
+        }
+
+        .header-title h2 {
+            margin: 0;
+            color: var(--primary-green);
+            font-size: 1.5em;
+            letter-spacing: 0.5px;
+        }
+
+        .header-title p {
+            margin: 3px 0 0 0;
+            color: #555;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .nav-btn {
+            background: var(--primary-green);
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: var(--dark-green);
         }
 
         .status-badge {
             text-align: center;
             font-size: 0.85em;
             background: #c8e6c9;
-            color: #1b5e20;
+            color: var(--primary-green);
             padding: 6px 12px;
             border-radius: 20px;
             margin-bottom: 20px;
             font-weight: bold;
+            border: 1px solid var(--primary-green);
+        }
+
+        /* Tata Letak Grid 2 Kolom (Landscape Layout) */
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .card-panel {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #c8e6c9;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 14px;
         }
 
         label {
             display: block;
             font-weight: bold;
             margin-bottom: 6px;
-            color: #333;
+            color: var(--primary-green);
+            font-size: 0.9em;
         }
 
         input, select, button {
             width: 100%;
-            padding: 12px;
+            padding: 11px 14px;
             border: 1px solid #ccc;
             border-radius: 8px;
-            font-size: 1em;
+            font-size: 0.95em;
             box-sizing: border-box;
         }
 
         input:focus, select:focus {
-            border-color: var(--primary-color);
+            border-color: var(--primary-green);
             outline: none;
+            box-shadow: 0 0 0 2px rgba(27, 94, 32, 0.2);
         }
 
         .input-scan {
             background-color: #f1f8e9;
-            border: 2px solid var(--primary-color);
+            border: 2px solid var(--primary-green);
             font-weight: bold;
             font-size: 1.1em;
             text-align: center;
+            color: var(--dark-green);
         }
 
         button {
-            background-color: var(--primary-color);
+            background-color: var(--primary-green);
             color: white;
             border: none;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 5px;
             transition: background 0.2s;
         }
 
         button:hover {
-            background-color: #0d3b10;
+            background-color: var(--dark-green);
         }
 
         /* Alert Notifikasi Presensi */
@@ -104,100 +175,142 @@
             display: none;
             text-align: center;
             font-weight: bold;
+            font-size: 0.9em;
         }
         .alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .alert-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
 
-        /* Tabel Histori Log Presensi Terakhir */
-        .log-container {
-            margin-top: 25px;
+        /* Tabel Log Pemindaian Terakhir (Kolom Kanan) */
+        .log-container h4 {
+            margin: 0 0 12px 0;
+            color: var(--primary-green);
+            font-size: 1em;
+        }
+        .table-scroll {
+            max-height: 320px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 8px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.9em;
+            font-size: 0.88em;
         }
         th, td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
             text-align: left;
         }
-        th { background-color: var(--primary-color); color: white; }
+        th { 
+            background-color: var(--primary-green); 
+            color: white; 
+            position: sticky;
+            top: 0;
+        }
+        tr:hover { background-color: #f9f9f9; }
+
+        /* Responsif jika diakses dari layar kecil */
+        @media (max-width: 850px) {
+            .grid-layout { grid-template-columns: 1fr; }
+            .container { padding: 15px; }
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>Presensi SDIT Al Fajri</h2>
+        <!-- Header Sekolah dengan Logo -->
+        <div class="header">
+            <div class="header-brand">
+                <!-- SVG Logo Sekolah (Dapat diganti URL gambar logo asli jika ada) -->
+                <svg class="school-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="48" fill="#1b5e20" stroke="#d4af37" stroke-width="4"/>
+                    <path d="M50 20 L75 40 L25 40 Z" fill="#d4af37"/>
+                    <rect x="30" y="42" width="40" height="35" rx="3" fill="white"/>
+                    <path d="M40 50 L60 50 M40 60 L60 60 M40 70 L55 70" stroke="#1b5e20" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <div class="header-title">
+                    <h2>SDIT AL FAJRI CAHAYA UMAT</h2>
+                    <p>Sistem Presensi & Pemindaian Barcode Siswa</p>
+                </div>
+            </div>
+            <a href="index.html" class="nav-btn">⬅️ Portal Utama</a>
+        </div>
+
         <div class="status-badge" id="siswaCounter">Memuat data siswa dari Google Sheets...</div>
 
-        <!-- Mode Scan Barcode (Otomatis) -->
-        <div class="form-group">
-            <label for="barcodeInput">📷 Scan Barcode 1D (NIS):</label>
-            <input type="text" id="barcodeInput" class="input-scan" placeholder="Arahkan Scanner ke Barcode..." autofocus autocomplete="off">
-        </div>
+        <!-- Tata Letak Landscape 2 Kolom -->
+        <div class="grid-layout">
+            
+            <!-- KOLOM KIRI: Form Pindaian & Input Manual -->
+            <div class="card-panel">
+                <!-- Mode Scan Barcode (Otomatis) -->
+                <div class="form-group">
+                    <label for="barcodeInput">📷 Scan Barcode 1D (NIS Siswa):</label>
+                    <input type="text" id="barcodeInput" class="input-scan" placeholder="Arahkan Scanner ke Kartu..." autofocus autocomplete="off">
+                </div>
 
-        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+                <hr style="margin: 18px 0; border: 0; border-top: 1px dashed var(--primary-green);">
 
-        <!-- Mode Input Manual (Opsi Pengganti Scanner) -->
-        <div class="form-group">
-            <label for="siswaSelect">👤 Atau Pilih Siswa (Otomatis Terisi):</label>
-            <select id="siswaSelect" onchange="onSiswaSelected()">
-                <option value="">-- Memuat Daftar Siswa --</option>
-            </select>
-        </div>
+                <!-- Mode Input Manual (Opsi Pengganti Scanner) -->
+                <div class="form-group">
+                    <label for="siswaSelect">👤 Atau Pilih Siswa Manual:</label>
+                    <select id="siswaSelect">
+                        <option value="">-- Memuat Daftar Siswa --</option>
+                    </select>
+                </div>
 
-        <div class="form-group">
-            <label for="statusSelect">Status Presensi:</label>
-            <select id="statusSelect">
-                <option value="Hadir">Hadir</option>
-                <option value="Sakit">Sakit</option>
-                <option value="Izin">Izin</option>
-                <option value="Alpa">Alpa</option>
-            </select>
-        </div>
+                <div class="form-group">
+                    <label for="statusSelect">Status Presensi:</label>
+                    <select id="statusSelect">
+                        <option value="Hadir">Hadir</option>
+                        <option value="Sakit">Sakit</option>
+                        <option value="Izin">Izin</option>
+                        <option value="Alpa">Alpa</option>
+                    </select>
+                </div>
 
-        <div class="form-group">
-            <label for="ketInput">Keterangan (Opsional):</label>
-            <input type="text" id="ketInput" placeholder="Contoh: Surat dokter / Acara keluarga">
-        </div>
+                <div class="form-group">
+                    <label for="ketInput">Keterangan (Opsional):</label>
+                    <input type="text" id="ketInput" placeholder="Contoh: Surat dokter / Acara keluarga">
+                </div>
 
-        <button onclick="kirimPresensiManual()">Simpan Presensi Manual</button>
+                <button onclick="kirimPresensiManual()">Simpan Presensi Manual</button>
+                <div id="alertBox"></div>
+            </div>
 
-        <div id="alertBox"></div>
+            <!-- KOLOM KANAN: Riwayat Pemindaian Terakhir -->
+            <div class="card-panel log-container">
+                <h4>📋 Riwayat Scan Hari Ini:</h4>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Waktu</th>
+                                <th>Nama Siswa</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logBody">
+                            <tr><td colspan="3" style="text-align:center;">Belum ada presensi yang di-scan.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-        <!-- Tabel Log Pemindaian Terakhir -->
-        <div class="log-container">
-            <h4 style="margin-bottom: 10px; color: var(--primary-color);">Riwayat Scan Hari Ini:</h4>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Waktu</th>
-                        <th>Nama</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody id="logBody">
-                    <tr><td colspan="3" style="text-align:center;">Belum ada presensi yang di-scan.</td></tr>
-                </tbody>
-            </table>
         </div>
     </div>
 
     <script>
-        // MASUKKAN URL WEB APP APPS SCRIPT ANDA DI SINI
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxXuUjc4VOHDuxeQER8qdWVpSbn8vDKDk_HI2PNRRViLt_bkuEfE1wFM1ODl1CrQw_1/exec';
 
         let dataSiswaMaster = [];
 
-        // Load Otomatis saat Halaman Dibuka
         document.addEventListener('DOMContentLoaded', function() {
             loadSiswaOtomatis();
             
-            // Auto focus ke input scan barcode
             const scanInput = document.getElementById('barcodeInput');
-            
-            // Deteksi Enter dari Alat Scanner 1D
             scanInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     const value = scanInput.value.trim();
@@ -209,7 +322,6 @@
             });
         });
 
-        // 1. Tarik Ratusan Siswa Otomatis dari Google Sheets
         function loadSiswaOtomatis() {
             fetch(APPS_SCRIPT_URL + '?action=getDaftarSiswa')
                 .then(res => res.json())
@@ -232,9 +344,7 @@
                 });
         }
 
-        // 2. Proses Presensi Otomatis via Scan Barcode
         function prosesPresensiBarcode(nis) {
-            // Cari data nama di memori lokal jika ada
             const siswaFound = dataSiswaMaster.find(s => String(s.nis).trim() === String(nis).trim());
             const namaSiswa = siswaFound ? siswaFound.nama : nis;
             const status = document.getElementById('statusSelect').value;
@@ -247,7 +357,6 @@
             });
         }
 
-        // 3. Proses Presensi Manual dari Dropdown
         function kirimPresensiManual() {
             const select = document.getElementById('siswaSelect');
             const nis = select.value;
@@ -269,7 +378,6 @@
             });
         }
 
-        // 4. Pengiriman Data Presensi ke Google Sheets (Apps Script)
         function kirimDataKeServer(payload) {
             showAlert("Mengirim data presensi...", "success");
 
@@ -283,7 +391,6 @@
                 showAlert(`✅ Presensi ${payload.nama} (${payload.status}) Berhasil Disimpan!`, "success");
                 tambahLogTabel(payload.nama, payload.status);
                 
-                // Reset input manual
                 document.getElementById('siswaSelect').value = "";
                 document.getElementById('ketInput').value = "";
                 document.getElementById('barcodeInput').focus();
