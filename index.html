@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Resmi SDIT Al Fajri Cahaya Umat</title>
+    <style>
+        :root {
+            --primary-dark: #2d6a4f;
+            --primary-mid: #98f5e1;
+            --bg-color: #f4fff8;
+        }
+
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        body {
+            margin: 0; padding: 0;
+            background-color: var(--bg-color);
+            color: var(--primary-dark);
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+        }
+
+        /* Hero Header */
+        .hero {
+            background: linear-gradient(135deg, #1b4332, #2d6a4f);
+            color: white; padding: 45px 20px 60px 20px; text-align: center;
+            border-bottom-left-radius: 35px; border-bottom-right-radius: 35px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+        .hero-logo {
+            width: 80px; height: 80px; object-fit: contain; margin-bottom: 10px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+        }
+        .hero h1 { margin: 5px 0; font-size: 2em; }
+        .hero p { margin: 0; opacity: 0.9; font-size: 1em; }
+
+        /* Container Menu Cards */
+        .container {
+            max-width: 1000px; margin: -35px auto 40px auto; padding: 0 20px;
+            width: 100%; flex: 1;
+        }
+
+        .portal-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 20px;
+        }
+
+        .portal-card {
+            background: white; border-radius: 18px; padding: 25px 20px;
+            text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            border: 2px solid var(--primary-mid); transition: 0.3s;
+            text-decoration: none; color: inherit; display: block;
+        }
+
+        .portal-card:hover {
+            transform: translateY(-8px); border-color: var(--primary-dark);
+            background: #e8fccf; box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+        }
+
+        .icon-box { font-size: 3em; margin-bottom: 10px; display: inline-block; }
+        .portal-card h3 { margin: 0 0 6px 0; color: var(--primary-dark); font-size: 1.1em; }
+        .portal-card p { margin: 0; font-size: 0.82em; color: #555; line-height: 1.4; }
+
+        .btn-link-print {
+            display: inline-block; margin-top: 15px; color: var(--primary-dark);
+            font-weight: bold; text-decoration: none; background: white;
+            padding: 8px 18px; border-radius: 20px; font-size: 0.85em;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1); transition: 0.2s;
+        }
+        .btn-link-print:hover { background: #e8fccf; transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+    <!-- Header Hero Sekolah -->
+    <div class="hero">
+        <img src="logo.png" alt="Logo SDIT" class="hero-logo" onerror="this.src='https://via.placeholder.com/80/2d6a4f/ffffff?text=SDIT'">
+        <h1>SDIT Al Fajri Cahaya Umat</h1>
+        <p>Portal Pelayanan Akademik & Presensi Terpadu</p>
+        <a href="Aplikasi_Cetak_Barcode_1D_SDIT_Al_Fajri.html" target="_blank" class="btn-link-print">
+            🖨️ Cetak Barcode Siswa 1D
+        </a>
+    </div>
+
+    <!-- Pilihan Menu Utama (Navigasi Berpindah Halaman) -->
+    <div class="container">
+        <div class="portal-grid">
+            
+            <a href="absensi.html" class="portal-card">
+                <div class="icon-box">📷</div>
+                <h3>Absensi Barcode</h3>
+                <p>Presensi 1D harian realtime dengan scanner & input manual.</p>
+            </a>
+
+            <a href="rekapan.html" class="portal-card">
+                <div class="icon-box">📊</div>
+                <h3>Rekapitulasi Absen</h3>
+                <p>Lihat data kehadiran mingguan & bulanan otomatis.</p>
+            </a>
+
+            <a href="nilai.html" class="portal-card">
+                <div class="icon-box">📝</div>
+                <h3>Data Nilai</h3>
+                <p>Akses data nilai tugas, PTS, dan PAS dari Google Sheets.</p>
+            </a>
+
+            <a href="https://drive.google.com" target="_blank" class="portal-card">
+                <div class="icon-box">📁</div>
+                <h3>Bank Soal</h3>
+                <p>Buka folder Google Drive berkas soal ulangan & modul.</p>
+            </a>
+
+        </div>
+    </div>
+
+</body>
+</html>
