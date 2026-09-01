@@ -139,8 +139,8 @@
     </div>
 
     <script>
-        // MASUKKAN URL DEPLOYMENT BARU APPS SCRIPT DI SINI
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxXxvnXWLKCQsTOw8G-iBYDmr8nwuVhYmGc5Gz7d1vjZdYvz3s1b0YTmJa3WuRMQjr9/exec'; 
+        // URL Web App Apps Script Resmi
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx4ezfmdFJdbQfb_Q2_3vndWd1CZflSMFlnnQKdl-dxxjTmgqB1fSBuVQd2noRRDq6-/exec'; 
 
         const databaseSiswa = {
             "262701003": "Albee Abizar Pahlevi",
@@ -209,7 +209,7 @@
         }
 
         function sendDataToSheets(nama, status, ket) {
-            if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes('URL_APPS_SCRIPT')) return;
+            if (!APPS_SCRIPT_URL) return;
             
             fetch(APPS_SCRIPT_URL, {
                 method: 'POST',
@@ -220,7 +220,9 @@
                     status: status,
                     keterangan: ket
                 })
-            });
+            })
+            .then(() => console.log("Data berhasil dikirim ke Apps Script!"))
+            .catch(err => console.error("Gagal mengirim data:", err));
         }
 
         function submitManual() {
