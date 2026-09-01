@@ -3,241 +3,324 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Presensi Barcode - SDIT Al Fajri</title>
+    <title>Presensi Siswa - SDIT Al Fajri Cahaya Umat</title>
     <style>
         :root {
-            --primary-light: #b9fbc0;
-            --primary-mid: #98f5e1;
-            --primary-dark: #2d6a4f;
-            --bg-color: #f4fff8;
+            --primary-color: #1b5e20;
+            --bg-color: #e8f5e9;
+            --card-bg: #ffffff;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color); color: var(--primary-dark);
-            margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-
-        .header {
-            width: 100%; max-width: 1100px; display: flex; justify-content: space-between;
-            align-items: center; background: linear-gradient(135deg, var(--primary-light), var(--primary-mid));
-            padding: 15px 25px; border-radius: 12px; margin-bottom: 20px; box-sizing: border-box;
-        }
-
-        .btn-back {
-            background: white; color: var(--primary-dark); font-weight: bold;
-            text-decoration: none; padding: 8px 16px; border-radius: 20px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1); transition: 0.2s;
-        }
-        .btn-back:hover { background: #e8fccf; }
 
         .container {
-            display: flex; flex-wrap: wrap; gap: 20px; width: 100%; max-width: 1100px;
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid var(--primary-color);
+            box-sizing: border-box;
         }
 
-        .panel {
-            background: white; border: 2px solid var(--primary-mid);
-            border-radius: 15px; padding: 20px; flex: 1; min-width: 300px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.04); box-sizing: border-box;
+        h2 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-top: 0;
         }
 
-        .mascot-container {
-            display: flex; justify-content: center; align-items: center;
-            gap: 20px; height: 75px; margin-bottom: 10px;
-        }
-        .animal-icon {
-            font-size: 3em; animation: bounceAnimal 2s infinite ease-in-out; user-select: none;
-        }
-        .animal-icon.rabbit { animation-delay: 0.3s; }
-
-        @keyframes bounceAnimal {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-14px); }
+        .status-badge {
+            text-align: center;
+            font-size: 0.85em;
+            background: #c8e6c9;
+            color: #1b5e20;
+            padding: 6px 12px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            font-weight: bold;
         }
 
-        .scan-box {
-            background: #e8fccf; border: 2px dashed var(--primary-dark);
-            padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 15px;
-        }
-        #scanInput {
-            width: 100%; padding: 12px; font-size: 1.1em;
-            border: 2px solid var(--primary-dark); border-radius: 8px; text-align: center; outline: none;
+        .form-group {
+            margin-bottom: 15px;
         }
 
-        .scan-result {
-            margin-top: 15px; padding: 12px; border-radius: 10px;
-            text-align: center; font-size: 1.2em; font-weight: bold; display: none;
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #333;
         }
-        .success-bg { background-color: #d4edda; color: #155724; }
-        .warning-bg { background-color: #fff3cd; color: #856404; }
 
         input, select, button {
-            width: 100%; padding: 10px; margin: 6px 0;
-            border: 1px solid var(--primary-mid); border-radius: 8px; font-size: 0.95em;
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+            box-sizing: border-box;
         }
-        button {
-            background-color: var(--primary-dark); color: white; border: none;
-            font-weight: bold; cursor: pointer; padding: 12px; transition: 0.3s;
-        }
-        button:hover { background-color: #1b4332; }
 
-        ul { list-style: none; padding: 0; max-height: 250px; overflow-y: auto; }
-        li {
-            background: #f0f4f1; margin: 6px 0; padding: 8px 12px; border-radius: 8px;
-            display: flex; justify-content: space-between; border-left: 4px solid var(--primary-dark);
+        input:focus, select:focus {
+            border-color: var(--primary-color);
+            outline: none;
         }
+
+        .input-scan {
+            background-color: #f1f8e9;
+            border: 2px solid var(--primary-color);
+            font-weight: bold;
+            font-size: 1.1em;
+            text-align: center;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: #0d3b10;
+        }
+
+        /* Alert Notifikasi Presensi */
+        #alertBox {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            display: none;
+            text-align: center;
+            font-weight: bold;
+        }
+        .alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+        /* Tabel Histori Log Presensi Terakhir */
+        .log-container {
+            margin-top: 25px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        th { background-color: var(--primary-color); color: white; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <a href="index.html" class="btn-back">⬅️ Menu Utama</a>
-        <h2 style="margin:0;">Presensi Barcode Siswa</h2>
-        <div id="clock" style="font-weight: bold;">00:00:00</div>
-    </div>
-
     <div class="container">
-        <!-- Panel Scanner -->
-        <div class="panel">
-            <div class="mascot-container">
-                <span class="animal-icon cat">🐱</span>
-                <span class="animal-icon rabbit">🐰</span>
-            </div>
+        <h2>Presensi SDIT Al Fajri</h2>
+        <div class="status-badge" id="siswaCounter">Memuat data siswa dari Google Sheets...</div>
 
-            <div class="scan-box">
-                <label for="scanInput"><b>Arahkan Scanner 1D ke Kartu Siswa</b></label><br><br>
-                <input type="text" id="scanInput" placeholder="Klik di sini lalu Scan Barcode..." autofocus autocomplete="off">
-            </div>
-            
-            <div id="scanResult" class="scan-result success-bg">
-                BERHASIL: <span id="studentName">Nama Siswa</span>
-            </div>
-            <audio id="beepSound" src="https://www.soundjay.com/buttons/sounds/button-09.mp3" preload="auto"></audio>
+        <!-- Mode Scan Barcode (Otomatis) -->
+        <div class="form-group">
+            <label for="barcodeInput">📷 Scan Barcode 1D (NIS):</label>
+            <input type="text" id="barcodeInput" class="input-scan" placeholder="Arahkan Scanner ke Barcode..." autofocus autocomplete="off">
         </div>
 
-        <!-- Panel Input Manual -->
-        <div class="panel">
-            <h3>Input Manual (Izin / Sakit / Lupa)</h3>
-            <label style="font-size:0.8em; font-weight:bold;">Cari Nama / Ketik Nama Depan:</label>
-            <input type="text" id="manualName" list="studentListOptions" placeholder="Ketik nama..." autocomplete="off">
-            <datalist id="studentListOptions"></datalist>
+        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
 
-            <select id="manualStatus">
-                <option value="Hadir (Lupa Kartu)">Hadir (Lupa Kartu)</option>
+        <!-- Mode Input Manual (Opsi Pengganti Scanner) -->
+        <div class="form-group">
+            <label for="siswaSelect">👤 Atau Pilih Siswa (Otomatis Terisi):</label>
+            <select id="siswaSelect" onchange="onSiswaSelected()">
+                <option value="">-- Memuat Daftar Siswa --</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="statusSelect">Status Presensi:</label>
+            <select id="statusSelect">
+                <option value="Hadir">Hadir</option>
                 <option value="Sakit">Sakit</option>
                 <option value="Izin">Izin</option>
+                <option value="Alpa">Alpa</option>
             </select>
-            <input type="text" id="manualKet" placeholder="Keterangan (Opsional)">
-            <button onclick="submitManual()">Kirim Data Manual</button>
         </div>
 
-        <!-- Panel Riwayat -->
-        <div class="panel">
-            <h3>Siswa Absen Hari Ini</h3>
-            <ul id="historyList"></ul>
+        <div class="form-group">
+            <label for="ketInput">Keterangan (Opsional):</label>
+            <input type="text" id="ketInput" placeholder="Contoh: Surat dokter / Acara keluarga">
+        </div>
+
+        <button onclick="kirimPresensiManual()">Simpan Presensi Manual</button>
+
+        <div id="alertBox"></div>
+
+        <!-- Tabel Log Pemindaian Terakhir -->
+        <div class="log-container">
+            <h4 style="margin-bottom: 10px; color: var(--primary-color);">Riwayat Scan Hari Ini:</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Waktu</th>
+                        <th>Nama</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="logBody">
+                    <tr><td colspan="3" style="text-align:center;">Belum ada presensi yang di-scan.</td></tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
     <script>
-        // URL Web App Apps Script Resmi
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwA3GrAJG_7K8wTI1FdblcjUOMGEkWSVoFNq7teUgV4QyrhE5dWla4HWho-Km0mTxt5/exec'; 
+        // MASUKKAN URL WEB APP APPS SCRIPT ANDA DI SINI
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxXuUjc4VOHDuxeQER8qdWVpSbn8vDKDk_HI2PNRRViLt_bkuEfE1wFM1ODl1CrQw_1/exec';
 
-        const databaseSiswa = {
-            "262701003": "Albee Abizar Pahlevi",
-            "262701004": "Alexander Abraham",
-            "262701005": "Muhammad Ramdan",
-            "1004": "Fatimah Azzahra"
-        }; 
+        let dataSiswaMaster = [];
 
-        function populateAutocomplete() {
-            const datalist = document.getElementById('studentListOptions');
-            datalist.innerHTML = '';
-            Object.values(databaseSiswa).forEach(nama => {
-                const opt = document.createElement('option');
-                opt.value = nama;
-                datalist.appendChild(opt);
+        // Load Otomatis saat Halaman Dibuka
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSiswaOtomatis();
+            
+            // Auto focus ke input scan barcode
+            const scanInput = document.getElementById('barcodeInput');
+            
+            // Deteksi Enter dari Alat Scanner 1D
+            scanInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const value = scanInput.value.trim();
+                    if (value !== "") {
+                        prosesPresensiBarcode(value);
+                        scanInput.value = "";
+                    }
+                }
+            });
+        });
+
+        // 1. Tarik Ratusan Siswa Otomatis dari Google Sheets
+        function loadSiswaOtomatis() {
+            fetch(APPS_SCRIPT_URL + '?action=getDaftarSiswa')
+                .then(res => res.json())
+                .then(data => {
+                    dataSiswaMaster = data;
+                    const select = document.getElementById('siswaSelect');
+                    const counter = document.getElementById('siswaCounter');
+
+                    select.innerHTML = '<option value="">-- Pilih Nama Siswa --</option>';
+                    
+                    data.forEach(siswa => {
+                        select.innerHTML += `<option value="${siswa.nis}" data-nama="${siswa.nama}">${siswa.nama} (${siswa.kelas}) - NIS: ${siswa.nis}</option>`;
+                    });
+
+                    counter.innerText = `✅ Database Aktif: Terhubung ${data.length} Siswa`;
+                })
+                .catch(err => {
+                    document.getElementById('siswaCounter').innerText = "⚠️ Gagal terhubung ke Google Sheets.";
+                    console.error(err);
+                });
+        }
+
+        // 2. Proses Presensi Otomatis via Scan Barcode
+        function prosesPresensiBarcode(nis) {
+            // Cari data nama di memori lokal jika ada
+            const siswaFound = dataSiswaMaster.find(s => String(s.nis).trim() === String(nis).trim());
+            const namaSiswa = siswaFound ? siswaFound.nama : nis;
+            const status = document.getElementById('statusSelect').value;
+
+            kirimDataKeServer({
+                nis: nis,
+                nama: namaSiswa,
+                status: status,
+                keterangan: "Scan Barcode 1D"
             });
         }
-        populateAutocomplete();
 
-        setInterval(() => {
-            document.getElementById('clock').innerText = new Date().toLocaleTimeString('id-ID');
-        }, 1000);
+        // 3. Proses Presensi Manual dari Dropdown
+        function kirimPresensiManual() {
+            const select = document.getElementById('siswaSelect');
+            const nis = select.value;
+            const selectedOption = select.options[select.selectedIndex];
+            const nama = selectedOption.getAttribute('data-nama');
+            const status = document.getElementById('statusSelect').value;
+            const ket = document.getElementById('ketInput').value || "-";
 
-        const scanInput = document.getElementById('scanInput');
-        document.addEventListener('click', (e) => {
-            if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'SELECT') {
-                scanInput.focus();
+            if (!nis) {
+                showAlert("Pilih nama siswa terlebih dahulu!", "error");
+                return;
             }
-        });
 
-        scanInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                let rawNis = scanInput.value.replace(/[^a-zA-Z0-9]/g, '').trim();
-                if (rawNis !== '') {
-                    let nama = databaseSiswa[rawNis] || "Siswa (NIS: " + rawNis + ")";
-                    let isUnknown = !databaseSiswa[rawNis];
-                    
-                    addToHistory(nama, 'Hadir');
-                    playSuccessSound(nama, isUnknown);
-                    scanInput.value = '';
-                    sendDataToSheets(nama, 'Hadir', 'Scan Barcode: ' + rawNis);
-                }
-            }
-        });
-
-        function playSuccessSound(nama, isUnknown) {
-            const sound = document.getElementById('beepSound');
-            sound.currentTime = 0; sound.play().catch(()=>{});
-
-            const res = document.getElementById('scanResult');
-            document.getElementById('studentName').innerText = nama;
-            res.className = isUnknown ? "scan-result warning-bg" : "scan-result success-bg";
-            res.style.display = 'block';
-
-            clearTimeout(window.scanTimeout);
-            window.scanTimeout = setTimeout(() => { res.style.display = 'none'; }, 2200);
+            kirimDataKeServer({
+                nis: nis,
+                nama: nama,
+                status: status,
+                keterangan: ket
+            });
         }
 
-        function addToHistory(nama, status) {
-            const list = document.getElementById('historyList');
-            const li = document.createElement('li');
-            const time = new Date().toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
-            li.innerHTML = `<span><b>${nama}</b> <small>(${time})</small></span> <span>${status}</span>`;
-            list.prepend(li);
-        }
+        // 4. Pengiriman Data Presensi ke Google Sheets (Apps Script)
+        function kirimDataKeServer(payload) {
+            showAlert("Mengirim data presensi...", "success");
 
-        function sendDataToSheets(nama, status, ket) {
-            if (!APPS_SCRIPT_URL) return;
-            
             fetch(APPS_SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
-                headers: { 'Content-Type': 'text/plain' },
-                body: JSON.stringify({
-                    nama: nama,
-                    status: status,
-                    keterangan: ket
-                })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
             })
-            .then(() => console.log("Data berhasil dikirim ke Apps Script!"))
-            .catch(err => console.error("Gagal mengirim data:", err));
+            .then(() => {
+                showAlert(`✅ Presensi ${payload.nama} (${payload.status}) Berhasil Disimpan!`, "success");
+                tambahLogTabel(payload.nama, payload.status);
+                
+                // Reset input manual
+                document.getElementById('siswaSelect').value = "";
+                document.getElementById('ketInput').value = "";
+                document.getElementById('barcodeInput').focus();
+            })
+            .catch(err => {
+                showAlert("❌ Gagal menyimpan presensi. Periksa koneksi internet.", "error");
+                console.error(err);
+            });
         }
 
-        function submitManual() {
-            const nama = document.getElementById('manualName').value.trim();
-            const status = document.getElementById('manualStatus').value;
-            const ket = document.getElementById('manualKet').value.trim();
-            if(!nama) return alert("Nama wajib diisi!");
-            
-            addToHistory(nama, status);
-            playSuccessSound(nama, false);
-            sendDataToSheets(nama, status, ket || "Manual Input");
-            
-            document.getElementById('manualName').value = '';
-            document.getElementById('manualKet').value = '';
-            scanInput.focus();
+        function showAlert(msg, type) {
+            const box = document.getElementById('alertBox');
+            box.className = type === 'success' ? 'alert-success' : 'alert-error';
+            box.innerText = msg;
+            box.style.display = 'block';
+
+            setTimeout(() => {
+                box.style.display = 'none';
+            }, 4000);
+        }
+
+        function tambahLogTabel(nama, status) {
+            const tbody = document.getElementById('logBody');
+            if (tbody.innerHTML.includes("Belum ada presensi")) {
+                tbody.innerHTML = "";
+            }
+
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+            const row = `<tr>
+                <td>${timeStr}</td>
+                <td><b>${nama}</b></td>
+                <td><span style="color:${status === 'Hadir' ? 'green' : 'orange'}">${status}</span></td>
+            </tr>`;
+
+            tbody.innerHTML = row + tbody.innerHTML;
         }
     </script>
 </body>
