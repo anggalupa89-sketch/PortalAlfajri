@@ -127,12 +127,12 @@
             <div class="filter-group">
                 <label>Pilih Kelas:</label>
                 <select id="kelasSelect">
-                    <option value="1">Kelas 1</option>
-                    <option value="2">Kelas 2</option>
-                    <option value="3">Kelas 3</option>
-                    <option value="4">Kelas 4</option>
-                    <option value="5">Kelas 5</option>
-                    <option value="6">Kelas 6</option>
+                    <option value="KELAS 1">KELAS 1</option>
+                    <option value="KELAS 2">KELAS 2</option>
+                    <option value="KELAS 3">KELAS 3</option>
+                    <option value="KELAS 4">KELAS 4</option>
+                    <option value="KELAS 5">KELAS 5</option>
+                    <option value="KELAS 6">KELAS 6</option>
                 </select>
             </div>
             
@@ -207,8 +207,8 @@
     </div>
 
     <script>
-        // Ganti URL ini dengan Live Web App URL dari Apps Script Anda
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwOiGmGFRXIvgCs5f9gbXVlw63RIKLSgNaYUxNepGWHLpv_Mfyz8FkQmCWZ9x5ED5Y0/exec';
+        // MASUKKAN URL WEB APP APPS SCRIPT ANDA DI SINI
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwA3GrAJG_7K8wTI1FdblcjUOMGEkWSVoFNq7teUgV4QyrhE5dWla4HWho-Km0mTxt5/exec';
 
         // Set default tanggal mingguan (7 hari terakhir s.d. hari ini)
         const today = new Date();
@@ -262,7 +262,7 @@
                     // Render Tabel Detail Siswa
                     tbody.innerHTML = '';
                     if (!data.list || data.list.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Tidak ada data siswa untuk kelas ini.</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Tidak ada data siswa untuk ' + kelas + '. Pastikan di tab DataSiswa terisi "' + kelas + '".</td></tr>';
                         return;
                     }
 
