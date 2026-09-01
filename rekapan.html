@@ -3,20 +3,284 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rekap Absensi - SDIT Al Fajri</title>
+    <title>Rekapitulasi Presensi - SDIT Al Fajri</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; background: #f4fff8; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .btn-back { background: #2d6a4f; color: white; text-decoration: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; }
-        iframe { width: 100%; height: 650px; border: 2px solid #98f5e1; border-radius: 12px; }
+        :root {
+            --primary-dark: #1b5e20;
+            --primary-light: #e8f5e9;
+            --accent-gold: #d4af37;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--primary-light);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .btn-back {
+            background: white;
+            color: var(--primary-dark);
+            font-weight: bold;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .container { width: 100%; max-width: 1000px; }
+
+        /* Card Filter Box */
+        .filter-card {
+            background: white;
+            border: 2px solid #a5d6a7;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .filter-group { display: flex; flex-direction: column; flex: 1; min-width: 150px; }
+        label { font-weight: bold; font-size: 0.85em; margin-bottom: 5px; color: var(--primary-dark); }
+        select, input, button {
+            padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.95em;
+        }
+        button {
+            background-color: var(--primary-dark); color: white; border: none;
+            font-weight: bold; cursor: pointer; height: 42px; align-self: flex-end; width: 100%;
+            transition: background 0.2s;
+        }
+        button:hover { background-color: #0d3b10; }
+
+        /* Ringkasan Total Box (Card Summary) */
+        .summary-grid {
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px; 
+            margin-bottom: 20px;
+        }
+        .summary-box {
+            background: white; border-radius: 10px; padding: 15px; text-align: center;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.05); border-left: 6px solid var(--primary-dark);
+        }
+        .summary-box.hadir { border-color: #2e7d32; }
+        .summary-box.sakit { border-color: #f57c00; }
+        .summary-box.izin { border-color: #0288d1; }
+        .summary-box.alpa { border-color: #d32f2f; }
+        
+        .summary-box h3 { margin: 0; font-size: 2em; color: #111; }
+        .summary-box p { margin: 5px 0 0 0; font-weight: bold; color: #666; font-size: 0.9em; }
+
+        /* Tabel Rekapitulasi */
+        .table-container {
+            background: white; border-radius: 12px; padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow-x: auto;
+        }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th, td { padding: 12px 15px; border-bottom: 1px solid #eee; }
+        th { background-color: var(--primary-dark); color: white; font-size: 0.9em; }
+        tr:hover { background-color: #f9f9f9; }
     </style>
 </head>
 <body>
+
     <div class="header">
-        <a href="index.html" class="btn-back">⬅️ Menu Utama</a>
-        <h2 style="color:#2d6a4f; margin:0;">Dashboard Rekapitulasi Absensi</h2>
+        <a href="index.html" class="btn-back">⬅️ Kembali ke Portal</a>
+        <h2 style="margin:0; font-size: 1.4em;">Rekapitulasi Presensi Siswa</h2>
+        <div></div>
     </div>
-    <!-- Tempelkan Link Publish to Web Google Sheets Rekapan Anda -->
-    <iframe src="LINK_PUBLIKASI_GOOGLE_SHEETS_REKAPAN_ANDA"></iframe>
+
+    <div class="container">
+        <!-- Control Filter Box -->
+        <div class="filter-card">
+            <div class="filter-group">
+                <label>Jenis Rekap:</label>
+                <select id="typeSelect" onchange="toggleFilterType()">
+                    <option value="mingguan">Rekap Mingguan</option>
+                    <option value="bulanan">Rekap Bulanan</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>Pilih Kelas:</label>
+                <select id="kelasSelect">
+                    <option value="1A">Kelas 1A</option>
+                    <option value="1B">Kelas 1B</option>
+                    <option value="2A">Kelas 2A</option>
+                    <option value="2B">Kelas 2B</option>
+                </select>
+            </div>
+            
+            <!-- Filter Tanggal Awal & Akhir (Untuk Rekap Mingguan) -->
+            <div class="filter-group filter-date">
+                <label>Tanggal Awal:</label>
+                <input type="date" id="startDateInput">
+            </div>
+            <div class="filter-group filter-date">
+                <label>Tanggal Akhir:</label>
+                <input type="date" id="endDateInput">
+            </div>
+
+            <!-- Filter Bulan & Tahun (Untuk Rekap Bulanan) -->
+            <div class="filter-group filter-month" style="display:none;">
+                <label>Pilih Bulan:</label>
+                <select id="monthSelect">
+                    <option value="Januari">Januari</option>
+                    <option value="Februari">Februari</option>
+                    <option value="Maret">Maret</option>
+                    <option value="April">April</option>
+                    <option value="Mei">Mei</option>
+                    <option value="Juni">Juni</option>
+                    <option value="Juli">Juli</option>
+                    <option value="Agustus">Agustus</option>
+                    <option value="September" selected>September</option>
+                    <option value="Oktober">Oktober</option>
+                    <option value="November">November</option>
+                    <option value="Desember">Desember</option>
+                </select>
+            </div>
+            <div class="filter-group filter-month" style="display:none;">
+                <label>Pilih Tahun:</label>
+                <select id="yearSelect">
+                    <option value="2026" selected>2026</option>
+                    <option value="2027">2027</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <button onclick="loadRekapData()">🔍 Tampilkan Data</button>
+            </div>
+        </div>
+
+        <!-- Ringkasan Statistik Total Per Kelas -->
+        <div class="summary-grid">
+            <div class="summary-box hadir"><h3 id="totalHadir">0</h3><p>Total Hadir</p></div>
+            <div class="summary-box sakit"><h3 id="totalSakit">0</h3><p>Total Sakit</p></div>
+            <div class="summary-box izin"><h3 id="totalIzin">0</h3><p>Total Izin</p></div>
+            <div class="summary-box alpa"><h3 id="totalAlpa">0</h3><p>Total Alpa</p></div>
+        </div>
+
+        <!-- Tabel Rekapitulasi -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr id="tableHeader">
+                        <th>NIS</th>
+                        <th>Nama Siswa</th>
+                        <th>Hadir</th>
+                        <th>Sakit</th>
+                        <th>Izin</th>
+                        <th>Alpa</th>
+                        <th>Total Presensi</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr><td colspan="7" style="text-align:center;">Silakan pilih kelas dan tanggal/bulan, lalu klik Tampilkan Data.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Ganti URL ini dengan Live Web App URL dari Apps Script Anda
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx4ezfmdFJdbQfb_Q2_3vndWd1CZflSMFlnnQKdl-dxxjTmgqB1fSBuVQd2noRRDq6-/exec';
+
+        // Set default tanggal mingguan (7 hari terakhir s.d. hari ini)
+        const today = new Date();
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(today.getDate() - 6);
+
+        document.getElementById('startDateInput').value = sevenDaysAgo.toISOString().substring(0, 10);
+        document.getElementById('endDateInput').value = today.toISOString().substring(0, 10);
+
+        function toggleFilterType() {
+            const type = document.getElementById('typeSelect').value;
+            const dateGroups = document.querySelectorAll('.filter-date');
+            const monthGroups = document.querySelectorAll('.filter-month');
+
+            if (type === 'mingguan') {
+                dateGroups.forEach(el => el.style.display = 'flex');
+                monthGroups.forEach(el => el.style.display = 'none');
+            } else {
+                dateGroups.forEach(el => el.style.display = 'none');
+                monthGroups.forEach(el => el.style.display = 'flex');
+            }
+        }
+
+        function loadRekapData() {
+            const type = document.getElementById('typeSelect').value;
+            const kelas = document.getElementById('kelasSelect').value;
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Memuat data presensi dari Google Sheets...</td></tr>';
+
+            let url = APPS_SCRIPT_URL + '?kelas=' + encodeURIComponent(kelas);
+
+            if (type === 'mingguan') {
+                const startTgl = document.getElementById('startDateInput').value;
+                const endTgl = document.getElementById('endDateInput').value;
+                url += '&action=getRekapHarian&tanggal=' + startTgl + '&endTanggal=' + endTgl;
+            } else {
+                const bln = document.getElementById('monthSelect').value;
+                const thn = document.getElementById('yearSelect').value;
+                url += '&action=getRekapBulanan&bulan=' + bln + '&tahun=' + thn;
+            }
+
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    // Update Box Total Statistik
+                    document.getElementById('totalHadir').innerText = data.total.hadir || 0;
+                    document.getElementById('totalSakit').innerText = data.total.sakit || 0;
+                    document.getElementById('totalIzin').innerText = data.total.izin || 0;
+                    document.getElementById('totalAlpa').innerText = data.total.alpa || 0;
+
+                    // Render Tabel Detail Siswa
+                    tbody.innerHTML = '';
+                    if (!data.list || data.list.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Tidak ada data siswa untuk kelas ini.</td></tr>';
+                        return;
+                    }
+
+                    data.list.forEach(item => {
+                        const totalPresensi = (item.hadir || 0) + (item.sakit || 0) + (item.izin || 0) + (item.alpa || 0);
+                        tbody.innerHTML += `<tr>
+                            <td>${item.nis}</td>
+                            <td><b>${item.nama}</b></td>
+                            <td><b style="color:#2e7d32;">${item.hadir || 0}</b></td>
+                            <td>${item.sakit || 0}</td>
+                            <td>${item.izin || 0}</td>
+                            <td>${item.alpa || 0}</td>
+                            <td><b>${totalPresensi}</b></td>
+                        </tr>`;
+                    });
+                })
+                .catch(err => {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Gagal mengambil data. Pastikan Apps Script sudah di-Deploy Ulang (Anyone).</td></tr>';
+                });
+        }
+    </script>
 </body>
 </html>
