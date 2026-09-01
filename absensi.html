@@ -139,7 +139,8 @@
     </div>
 
     <script>
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwcH_sedbFTPoNBQcpw7_3ILmKO0kLwj74R19AsaDoc8K8E-DdPX7vqE2Yk9eKCfraN/exec'; 
+        // MASUKKAN URL DEPLOYMENT BARU APPS SCRIPT DI SINI
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxXxvnXWLKCQsTOw8G-iBYDmr8nwuVhYmGc5Gz7d1vjZdYvz3s1b0YTmJa3WuRMQjr9/exec'; 
 
         const databaseSiswa = {
             "262701003": "Albee Abizar Pahlevi",
@@ -210,7 +211,6 @@
         function sendDataToSheets(nama, status, ket) {
             if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes('URL_APPS_SCRIPT')) return;
             
-            // Gunakan text/plain agar bebas dari blokir CORS Browser
             fetch(APPS_SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
